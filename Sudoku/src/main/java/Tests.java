@@ -5,10 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Tests {
-	
-	//public boolean change_occured = false;
-	
-	// Reference Code
+		
+	// Dev-Only. Reference Code for iterating through the 2D grid.
 	public static void iterateThroughGrid(int[][] input) {
 		
 		int[][] nums = input;
@@ -22,7 +20,7 @@ public class Tests {
 		}
 	}
 	
-	// Setup unsolved numbers to have every option
+	// Functional. Sets every blank square to have all unsolved options (123456789).
 	public static int[][] setupUnsolvedNumbers(int[][] grid) {
 		
 		int[][] nums = grid;
@@ -42,202 +40,8 @@ public class Tests {
 		return nums;
 	}
 	
-	
-	// Update Row Solved Arrays
-	public static int[][] updateRowSolvedArrays(int[][] grid) {
-		int[][] nums = grid;
-		int[][] result = new int[9][9];
-		
-		for (int y=0; y<9; y++) {
-			
-			for (int x=0; x<9; x++) {
-				
-				int z = nums[y][x];
-				
-				if (z < 10) {
-					//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
-					result[y][z-1] = z;
-					//System.out.println("result: (row)[" + y + "], (index)[" + (z-1) + "], (value) = " + z);
-					//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
-				}
-			}
-			
-			String returnString = Tests.displayArrayAsString(result, y);
-			//String returnString = Tests.displayArrayAsString(result);
-			System.out.println("Row " + (y+1) + " Solved Numbers = " + returnString);
-		}
-		
-		return result;
-	}
-	
-	// Update Column Solved Arrays
-	public static int[][] updateColumnSolvedArrays(int[][] grid) {
-			int[][] nums = grid;
-			int[][] result = new int[9][9];			
-			
-			for (int x=0; x<9; x++) {
-				
-				for (int y=0; y<9; y++) {
-					
-					int z = nums[y][x];
-					
-					if (z < 10) {
-						//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
-						result[x][z-1] = z;
-						//System.out.println("result: (column)[" + x + "], (index)[" + (z-1) + "], (value) = " + z);
-						//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
-					}
-				}
-				String returnString = Tests.displayArrayAsString(result, x);
-				System.out.println("Column " + (x+1) + " Solved Numbers = " + returnString);
-			}
-			
-			return result;
-		}
-		
-	// Update Block Solved Arrays
-	public static int[][] updateBlockSolvedArrays(int[][] grid) {
-					int[][] nums = grid;
-					int[][] result = new int[9][9];			
-					
-					for (int y=0; y<9; y++) {
-						
-						for (int x=0; x<9; x++) {
-							
-							int z = nums[y][x];
-							
-							if (z < 10) {
-								if (x<3) {
-									//block 1 / 2 / 3
-									if (y < 3 ) {
-										//block 1
-										result[0][z-1] = z;
-										//System.out.println("Block 1 assigned: " + z);
-									} else if (y < 6) {
-										//block 2
-										result[1][z-1] = z;
-										//System.out.println("Block 2 assigned: " + z);
-									} else {
-										//block 3
-										result[2][z-1] = z;
-										//System.out.println("Block 3 assigned: " + z);
-									}
-
-								} else if (x < 6) {
-									//block 4 / 5 / 6
-									if (y < 3 ) {
-										//block 4
-										result[3][z-1] = z;
-										//System.out.println("Block 4 assigned: " + z);
-									} else if (y < 6) {
-										//block 5
-										result[4][z-1] = z;
-										//System.out.println("Block 5 assigned: " + z);
-									} else {
-										//block 6
-										result[5][z-1] = z;
-										//System.out.println("Block 6 assigned: " + z);
-									}
-								} else {
-									//block 7 / 8 / 9
-									if (y < 3 ) {
-										//block 7
-										result[6][z-1] = z;
-										//System.out.println("Block 7 assigned: " + z);
-									} else if (y < 6) {
-										//block 8
-										result[7][z-1] = z;
-										//System.out.println("Block 8 assigned: " + z);
-									} else {
-										//block 9
-										result[8][z-1] = z;
-										//System.out.println("Block 9 assigned: " + z);
-									}
-								}
-								
-								//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
-								result[x][z-1] = z;
-								//System.out.println("result: (column)[" + x + "], (index)[" + (z-1) + "], (value) = " + z);
-								//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
-							}
-						}
-					}
-					
-					for(int i=0; i<9; i++) {
-						String returnString = Tests.displayArrayAsString(result, i);
-						System.out.println("Block " + (i+1) + " Solved Numbers = " + returnString);
-					}
-					
-					return result;
-				}		
-	
-	
-	// Display Array as String (with row Ref)
-	public static String displayArrayAsString(int[][] inputArray, int y) {
-		int[][] array = inputArray;
-		String returnString = "";
-		
-		for (int x = 0; x < array.length; x++) {
-			if(array[y][x] != 0) {
-				returnString += Integer.toString(array[y][x]);
-			}
-		}
-		//System.out.println(returnString);
-		return returnString;
-	}
-	
-	
-	
-	// Remove potential options from unsolved squares based upon Solved Number Arrays
-	public static void updateCellOptions(int[][] input) {
-		
-		int[][] nums = input;
-		
-		for (int y=0; y<9; y++) {
-			
-			for (int x=0; x<9; x++) {
-				
-				int z = nums[y][x];
-				
-				if (z > 10) {
-					System.out.println(y + "|" + x + " unsolved number currently " + z);
-					cullSolvedNums(z);
-				}
-			}
-		}
-	}
-	
-	// Takes int, converts to string, 
-	public static int cullSolvedNums(int input) {
-		
-		String string = Integer.toString(input);
-		string = string.replace("3", "");
-				
-		int output = Integer.parseInt(string);
-		
-		System.out.println("outputting: " + output);
-				
-		return output;
-	}
-	
-	/*
-	int testInt = 123456789;
-	
-	System.out.println(testInt);
-	
-	String testString = Integer.toString(testInt);
-	String removeVal = 
-	
-	testString = testString.replace("3", "");
-	
-	testInt = Integer.parseInt(testString);
-	
-	System.out.println(testInt);*/
-	
-	
-	
-	// Other idea. Iterate whole grid scanning relevant row/column/block on the fly
-	public static int[][] megaOptionsCull(int[][] input) {
+	// Functional. Iterates through whole grid scanning each square's row/column/block and updating it as it goes. (Elimination)
+	public static int[][] eliminationTest(int[][] input) {
 
 		int[][] nums = input;
 		boolean change_occured = false;
@@ -247,9 +51,9 @@ public class Tests {
 			for (int x=0; x<9; x++) {
 				
 				int z = nums[y][x];
-				//System.out.println("Checking cell: " + y + "|" + x);
 
-				if (z > 9) {  				    // check number is not solved
+				// check number in current square is not solved
+				if (z > 9) {  
 					
 					// check row for solved numbers
 					for (int a=0; a<9; a++) {   
@@ -260,7 +64,7 @@ public class Tests {
 								str = str.replace(Integer.toString(c), "");
 								if (!str.isEmpty()) {z = Integer.parseInt(str);}
 								nums[y][x] = z;
-								System.out.println("Row: " + y + "|" + x + " (" + z + ") Removing: " + c + " New value: " + nums[y][x]);
+								System.out.println("Row: " + y + "|" + x + " (" + z + ") Removing: " + c + " New value: " + nums[y][x]); // Output message confirming change made.
 								change_occured = true;
 							}
 						}
@@ -275,7 +79,7 @@ public class Tests {
 								str = str.replace(Integer.toString(c), "");
 								if (!str.isEmpty()) {z = Integer.parseInt(str);}
 								nums[y][x] = z;
-								System.out.println("Col: " + y + "|" + x + " (" + z + ") Removing: " + c + " New value: " + nums[y][x]);
+								System.out.println("Col: " + y + "|" + x + " (" + z + ") Removing: " + c + " New value: " + nums[y][x]); // Output message confirming change made.
 								change_occured = true;
 							}
 						}
@@ -457,18 +261,18 @@ public class Tests {
 		}
 		return nums;
 	}
-	/*
-	private static void blockSolve (int c) {
-		
-		if (c < 10) {           // if solved number found, remove from current unsolved number.
-			String str = Integer.toString(z);
-			str = str.replace(Integer.toString(c), "");
-			if (!str.isEmpty()) {z = Integer.parseInt(str);}
-			nums[y][x] = z;
-			System.out.println("Blk: " + y + "|" + x + " (" + z + ") Removing: " + c + " New value: " + nums[y][x]);
-		}
-	} */
 	
+		
+	// Deduction Method
+	// Iterate through each row. For each square in the row >9 add the numbers to a list. After checking the row, check list for any number that only appears once, 'solve' those squares.
+	// Repeat for columns.
+	// Repeat for blocks.
+	
+	
+	
+	
+	
+	// ############################## WIP Automatic Trial and Error Testing #################################
 	// Create solverNums[][]
 	// solverNums.spares = nums.value
 	// Iterate through whole grid
@@ -542,5 +346,180 @@ public class Tests {
 		}*/
 		
 	}
+		//################### Deprecated Code that got used in EliminationTest Instead #####################
+		// Deprecated method. Replaced with eliminationTest. Update Row Solved Arrays.
+		public static int[][] updateRowSolvedArrays(int[][] grid) {
+			int[][] nums = grid;
+			int[][] result = new int[9][9];
+			
+			for (int y=0; y<9; y++) {
+				
+				for (int x=0; x<9; x++) {
+					
+					int z = nums[y][x];
+					
+					if (z < 10) {
+						//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
+						result[y][z-1] = z;
+						//System.out.println("result: (row)[" + y + "], (index)[" + (z-1) + "], (value) = " + z);
+						//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
+					}
+				}
+				
+				String returnString = Tests.displayArrayAsString(result, y);
+				//String returnString = Tests.displayArrayAsString(result);
+				System.out.println("Row " + (y+1) + " Solved Numbers = " + returnString);
+			}
+			
+			return result;
+		}
+		
+		// Deprecated method. Replaced with eliminationTest. Update Column Solved Arrays
+		public static int[][] updateColumnSolvedArrays(int[][] grid) {
+				int[][] nums = grid;
+				int[][] result = new int[9][9];			
+				
+				for (int x=0; x<9; x++) {
+					
+					for (int y=0; y<9; y++) {
+						
+						int z = nums[y][x];
+						
+						if (z < 10) {
+							//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
+							result[x][z-1] = z;
+							//System.out.println("result: (column)[" + x + "], (index)[" + (z-1) + "], (value) = " + z);
+							//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
+						}
+					}
+					String returnString = Tests.displayArrayAsString(result, x);
+					System.out.println("Column " + (x+1) + " Solved Numbers = " + returnString);
+				}
+				
+				return result;
+			}
+			
+		// Deprecated method. Replaced with eliminationTest. Update Block Solved Arrays
+		public static int[][] updateBlockSolvedArrays(int[][] grid) {
+						int[][] nums = grid;
+						int[][] result = new int[9][9];			
+						
+						for (int y=0; y<9; y++) {
+							
+							for (int x=0; x<9; x++) {
+								
+								int z = nums[y][x];
+								
+								if (z < 10) {
+									if (x<3) {
+										//block 1 / 2 / 3
+										if (y < 3 ) {
+											//block 1
+											result[0][z-1] = z;
+											//System.out.println("Block 1 assigned: " + z);
+										} else if (y < 6) {
+											//block 2
+											result[1][z-1] = z;
+											//System.out.println("Block 2 assigned: " + z);
+										} else {
+											//block 3
+											result[2][z-1] = z;
+											//System.out.println("Block 3 assigned: " + z);
+										}
 
+									} else if (x < 6) {
+										//block 4 / 5 / 6
+										if (y < 3 ) {
+											//block 4
+											result[3][z-1] = z;
+											//System.out.println("Block 4 assigned: " + z);
+										} else if (y < 6) {
+											//block 5
+											result[4][z-1] = z;
+											//System.out.println("Block 5 assigned: " + z);
+										} else {
+											//block 6
+											result[5][z-1] = z;
+											//System.out.println("Block 6 assigned: " + z);
+										}
+									} else {
+										//block 7 / 8 / 9
+										if (y < 3 ) {
+											//block 7
+											result[6][z-1] = z;
+											//System.out.println("Block 7 assigned: " + z);
+										} else if (y < 6) {
+											//block 8
+											result[7][z-1] = z;
+											//System.out.println("Block 8 assigned: " + z);
+										} else {
+											//block 9
+											result[8][z-1] = z;
+											//System.out.println("Block 9 assigned: " + z);
+										}
+									}
+									
+									//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
+									result[x][z-1] = z;
+									//System.out.println("result: (column)[" + x + "], (index)[" + (z-1) + "], (value) = " + z);
+									//System.out.println("grid y = " + y + ", grid x = " + x + ", val = " + z);
+								}
+							}
+						}
+						
+						for(int i=0; i<9; i++) {
+							String returnString = Tests.displayArrayAsString(result, i);
+							System.out.println("Block " + (i+1) + " Solved Numbers = " + returnString);
+						}
+						
+						return result;
+					}		
+		
+		// Deprecated method part of the above. Not used in eliminationTest. Display Array as String (with row Ref)
+		public static String displayArrayAsString(int[][] inputArray, int y) {
+			int[][] array = inputArray;
+			String returnString = "";
+			
+			for (int x = 0; x < array.length; x++) {
+				if(array[y][x] != 0) {
+					returnString += Integer.toString(array[y][x]);
+				}
+			}
+			//System.out.println(returnString);
+			return returnString;
+		}
+		
+		// Deprecated method part of the above. Not used in eliminationTest. Remove potential options from unsolved squares based upon Solved Number Arrays
+		public static void updateCellOptions(int[][] input) {
+			
+			int[][] nums = input;
+			
+			for (int y=0; y<9; y++) {
+				
+				for (int x=0; x<9; x++) {
+					
+					int z = nums[y][x];
+					
+					if (z > 10) {
+						System.out.println(y + "|" + x + " unsolved number currently " + z);
+						cullSolvedNums(z);
+					}
+				}
+			}
+		}
+		
+		// Deprecated method part of the above. Not used in eliminationTest. Takes int, converts to string, 
+		public static int cullSolvedNums(int input) {
+			
+			String string = Integer.toString(input);
+			string = string.replace("3", "");
+					
+			int output = Integer.parseInt(string);
+			
+			System.out.println("outputting: " + output);
+					
+			return output;
+		}
+		
+	
 }
