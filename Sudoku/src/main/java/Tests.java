@@ -20,6 +20,35 @@ public class Tests {
 		}
 	}
 	
+	// Functional. Iterates through whole grid to check for any unsolved numbers. Returns boolean to let the game know if it is completed yet.
+	public static boolean checkIfComplete(int[][] input) {
+			
+			boolean complete = true;
+			
+			int[][] nums = input;
+			
+			System.out.print("Checking if board is complete... ");
+			
+			for (int y=0; y<9; y++) {
+				
+				for (int x=0; x<9; x++) {
+					
+					int z = nums[y][x];
+					
+					if (z > 9) {
+						complete = false;
+						System.out.println("Unsolved square found!");
+						System.out.println("");
+						return complete;
+					}
+				}
+			}
+			
+			System.out.println("Game Completed");
+			
+			return complete;
+		}
+	
 	// Functional. Sets every blank square to have all unsolved options (123456789).
 	public static int[][] setupUnsolvedNumbers(int[][] grid) {
 		
@@ -262,9 +291,253 @@ public class Tests {
 		return nums;
 	}
 	
+	// Functional. Iterates through whole grid checking whether any row/column/block has a number that appears only once among the unsolved numbers. (Deduction)
+	public static int[][] deductionTest(int[][] input) {
 		
+		int[][] nums = input;
+		String lineValue = "";
+		
+		//######## Row Deduction #######
+		
+		for (int y=0; y<9; y++) {
+			
+			for (int x=0; x<9; x++) {
+				
+				int z = nums[y][x];
+				
+				if (z > 9) {  // Check number is unsolved.
+					
+					lineValue = lineValue + z; // Add the whole line to a String
+					
+					//System.out.println(lineValue);
+					
+				}
+				
+			}
+			
+			for (int i = 1; i < 10; i++) { // Look for numbers 1-9 in String
+				
+				if (lineValue.indexOf(String.valueOf(i)) != -1) { // Check the target number appears at all.
+					
+					//System.out.println("First occurrence of " + i + " @ " + lineValue.indexOf(String.valueOf(i))); // Debug output
+					//System.out.println("Last occurrence of " + i + " @ " + lineValue.lastIndexOf(String.valueOf(i))); // Debug output
+						
+					if (lineValue.indexOf(String.valueOf(i)) == lineValue.lastIndexOf(String.valueOf(i))) { // Look for single occurrence numbers
+						//System.out.println("Only one instance of " + i + " found!"); // Notify when a isolated number is found
+						
+						//Method that takes 'i', finds the cell with it in, changes the value to 'i'
+						
+						//solveDeduction(nums, y, i); //Experimental method to save repetition
+						
+						for (int x=0; x<9; x++) { // Iterate through current row again...
+							
+							int z = nums[y][x];
+							
+							if (z > 9) {  // Check number is unsolved.
+								
+								if (String.valueOf(z).contains(String.valueOf(i))) { // Check whether this unsolved number has the single occurrence number in it.
+									
+									//System.out.println("Number: " + i + " is in cell: " + y + " | " + x); // Dev info.
+									
+									nums[y][x] = i; // Set square to just the single occurrence number.
+									
+									System.out.println("Ded: " + y + "|" + x + " Solved. Was only (" + i + ") remaining in Row."); // Dev info.
+									
+								}
+								
+							}
+							
+						}
+					}
+				}
+				
+			
+			}
+			
+			lineValue = ""; // Clear String for next row
+			
+		}
+		
+		// ####### Column Deduction ######
+		
+		for (int y=0; y<9; y++) {
+			
+			for (int x=0; x<9; x++) {
+				
+				int z = nums[x][y];
+				
+				if (z > 9) {  // Check number is unsolved.
+					
+					lineValue = lineValue + z; // Add the whole line to a String
+					
+					//System.out.println(lineValue);
+					
+				}
+				
+			}
+			
+			for (int i = 1; i < 10; i++) { // Look for numbers 1-9 in String
+				
+				if (lineValue.indexOf(String.valueOf(i)) != -1) { // Check the target number appears at all.
+					
+					//System.out.println("First occurrence of " + i + " @ " + lineValue.indexOf(String.valueOf(i))); // Debug output
+					//System.out.println("Last occurrence of " + i + " @ " + lineValue.lastIndexOf(String.valueOf(i))); // Debug output
+						
+					if (lineValue.indexOf(String.valueOf(i)) == lineValue.lastIndexOf(String.valueOf(i))) { // Look for single occurrence numbers
+						//System.out.println("Only one instance of " + i + " found!"); // Notify when a isolated number is found
+						
+						//Method that takes 'i', finds the cell with it in, changes the value to 'i'
+						
+						//solveDeduction(nums, y, i); //Experimental method to save repetition
+						
+						for (int x=0; x<9; x++) { // Iterate through current column again...
+							
+							int z = nums[x][y];
+							
+							if (z > 9) {  // Check number is unsolved.
+								
+								if (String.valueOf(z).contains(String.valueOf(i))) { // Check whether this unsolved number has the single occurrence number in it.
+									
+									//System.out.println("Number: " + i + " is in cell: " + y + " | " + x); // Dev info.
+									
+									nums[x][y] = i; // Set square to just the single occurrence number.
+									
+									System.out.println("Ded: " + y + "|" + x + " Solved. Was only (" + i + ") remaining in Column."); // Dev info.
+									
+								}
+								
+							}
+							
+						}
+					}
+				}
+				
+			
+			}
+			
+			lineValue = ""; // Clear String for next column
+			
+		}
+
+		//##### Block Deduction #####
+		
+		int x = 0;
+		int y = 0;
+		
+		for (int a=0; a<3; a++) {
+			for (int b=0; b<3; b++) {
+		
+				for (int c=0; c<3; c++) {
+					for (int d=0; d<3; d++) {
+						
+						//Stuff happens per line
+						
+						x = b*3 + d;
+						y = a*3 + c;
+						
+						//System.out.print((y)+","+ (x) + " | ");
+						
+						int z = nums[y][x];
+						
+						if (z > 9) {
+						
+							lineValue = lineValue + z; // Add the whole line to a String
+							
+							//System.out.println(lineValue);
+							
+						}
+
+
+					}
+				}
+					
+				for (int i = 1; i < 10; i++) { // Look for numbers 1-9 in String
+					
+					if (lineValue.indexOf(String.valueOf(i)) != -1) { // Check the target number appears at all.
+						
+						//System.out.println("First occurrence of " + i + " @ " + lineValue.indexOf(String.valueOf(i))); // Debug output
+						//System.out.println("Last occurrence of " + i + " @ " + lineValue.lastIndexOf(String.valueOf(i))); // Debug output
+							
+						if (lineValue.indexOf(String.valueOf(i)) == lineValue.lastIndexOf(String.valueOf(i))) { // Look for single occurrence numbers
+							//System.out.println("Only one instance of " + i + " found!"); // Notify when a isolated number is found
+							
+							//Method that takes 'i', finds the cell with it in, changes the value to 'i'
+							
+							//solveDeduction(nums, y, i); //Experimental method to save repetition
+							
+							for (int c=0; c<3; c++) {
+								for (int d=0; d<3; d++) {
+									
+									x = b*3 + d;
+									y = a*3 + c;
+									
+									//System.out.println("a: " + a + " b: " + b + " c: " + c + " d: " + d); // Dev info.
+									
+									int z = nums[y][x];
+									
+									if (z > 9) {  // Check number is unsolved.
+										
+										if (String.valueOf(z).contains(String.valueOf(i))) { // Check whether this unsolved number has the single occurrence number in it.
+											
+											//System.out.println("Number: " + i + " is in cell: " + y + " | " + x); // Dev info.
+											
+											nums[y][x] = i; // Set square to just the single occurrence number.
+											
+											System.out.println("Ded: " + y + "|" + x + " Solved. Was only (" + i + ") remaining in Block."); // Dev info.
+										}
+									}
+								}
+							}
+						}
+					}
+					//Resets to next line
+				}
+				//Resets to next block
+				lineValue = ""; // Clear string for next block;
+				//System.out.println("");
+			}
+		}
+			
+		return nums;
+		
+	}
+	
+			
+	// WIP For refactoring code to avoid repetition. Unsure if this will work as Row Deduction exclusively uses y as a variable coord and columns use x exclusively.
+	//
+	public static void solveDeduction(int[][] grid_input, int row_input, int number_input) {
+		
+		int[][] nums = grid_input;
+		int y = row_input;
+		int i = number_input;
+		
+		
+		for (int x=0; x<9; x++) { // Iterate through current row again...
+			
+			int z = nums[y][x];
+			
+			if (z > 9) {  // Check number is unsolved.
+				
+				if (String.valueOf(z).contains(String.valueOf(i))) { // Check whether this unsolved number has the single occurrence number in it.
+					
+					System.out.println("Number: " + i + " is in cell: " + y + " | " + x); // Dev info.
+					
+					nums[y][x] = i; // Set square to just the single occurrence number.
+					
+					System.out.println("Cell " + y + "|" + x + " set to: " + i); // Dev info.
+					
+				}
+				
+			}
+			
+		}
+		
+	}
+	
 	// Deduction Method
-	// Iterate through each row. For each square in the row >9 add the numbers to a list. After checking the row, check list for any number that only appears once, 'solve' those squares.
+	// Iterate through each row. 
+	// For each square in the row >9 add the numbers to a String.
+	// After checking the whole row, check String for any number that only appears once, 'solve' those squares.
 	// Repeat for columns.
 	// Repeat for blocks.
 	

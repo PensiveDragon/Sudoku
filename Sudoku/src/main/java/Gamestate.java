@@ -5,9 +5,13 @@ import java.util.ArrayList;
 public class Gamestate {
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		Grid grid1 = new Grid();
+		int passes = 1;
+		
+		Grid gridBackOne = new Grid();
+		Grid gridBackTwo = new Grid(); 
+		
 		
 		grid1.nums[0][0] = 1;
 		grid1.nums[0][1] = 3;
@@ -57,18 +61,39 @@ public class Gamestate {
 		grid1.nums[8][1] = 9;
 		grid1.nums[8][6] = 4;
 		*/
-		
+				
 		grid1.nums = Tests.setupUnsolvedNumbers(grid1.nums);
 		
 		Display.gamestateDisplay(grid1.nums);
 		System.out.println();
 		
-		System.out.println("Pass One");
+		
+		do { 
+		
+		System.out.println("Pass: " + passes);
+		passes++;
+		gridBackTwo.nums = gridBackOne.nums;
+		gridBackOne.nums = grid1.nums;
+		
 		Tests.eliminationTest(grid1.nums);
 		System.out.println();
 		Display.gamestateDisplayVerbose(grid1.nums);
 		System.out.println();
-	
+		Tests.deductionTest(grid1.nums);
+		System.out.println();
+		Display.gamestateDisplayVerbose(grid1.nums);
+		System.out.println();
+		
+		/*
+		// NEEDS WORK ON UNDERSTANDING WHEN STUCK INTELLIGENTLY
+		if (grid1.nums.equals(gridBackOne.nums) && grid1.nums.equals(gridBackTwo.nums)) {
+			System.out.println("Game is stuck! Breaking process");
+			break;
+		}*/
+		
+		} while (!Tests.checkIfComplete(grid1.nums) && (passes < 10));
+		
+
 	}
 
 }
